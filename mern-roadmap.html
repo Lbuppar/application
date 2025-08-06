@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERN Stack Learning Roadmap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .roadmap-container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .learning-path {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            min-width: max-content;
+            padding: 20px;
+            position: relative;
+        }
+
+        .tech-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+
+        .tech-node.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .tech-main {
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 120px;
+            text-align: center;
+            border: 3px solid;
+            background: white;
+        }
+
+        .tech-main:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Technology specific colors */
+        .html { border-color: #E34F26; color: #E34F26; }
+        .css { border-color: #1572B6; color: #1572B6; }
+        .javascript { border-color: #F7DF1E; color: #F7DF1E; background: #333; }
+        .mern { 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 1.4rem;
+            padding: 20px 30px;
+        }
+        .mongodb { border-color: #4DB33D; color: #4DB33D; }
+        .express { border-color: #000000; color: #000000; }
+        .react { border-color: #61DAFB; color: #61DAFB; }
+        .nodejs { border-color: #68A063; color: #68A063; }
+
+        /* Horizontal arrows */
+        .horizontal-arrow {
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .horizontal-arrow.show {
+            opacity: 1;
+        }
+
+        .horizontal-arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid #764ba2;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .subtopics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            min-width: 200px;
+        }
+
+        .subtopics.active {
+            opacity: 1;
+            max-height: 500px;
+        }
+
+        .subtopic {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid;
+            font-size: 0.9rem;
+        }
+
+        .subtopic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Subtopic colors matching parent */
+        .html .subtopic { border-left-color: #E34F26; }
+        .css .subtopic { border-left-color: #1572B6; }
+        .javascript .subtopic { border-left-color: #F7DF1E; }
+        .mongodb .subtopic { border-left-color: #4DB33D; }
+        .express .subtopic { border-left-color: #000000; }
+        .react .subtopic { border-left-color: #61DAFB; }
+        .nodejs .subtopic { border-left-color: #68A063; }
+
+        .branch-main {
+            background: white;
+            border: 3px solid;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .branch-main:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .mongodb { border-color: #4DB33D; color: #4DB33D; }
+        .express { border-color: #000000; color: #000000; }
+        .react { border-color: #61DAFB; color: #61DAFB; }
+        .nodejs { border-color: #68A063; color: #68A063; }
+
+        .subtopics {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .subtopics.active {
+            opacity: 1;
+            max-height: 1000px;
+        }
+
+        .subtopic {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 4px solid;
+            min-width: 250px;
+        }
+
+        .subtopic:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .mongodb .subtopic { border-left-color: #4DB33D; }
+        .express .subtopic { border-left-color: #000000; }
+        .react .subtopic { border-left-color: #61DAFB; }
+        .nodejs .subtopic { border-left-color: #68A063; }
+
+        .connecting-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, #667eea, transparent);
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4DB33D, #61DAFB, #68A063, #000000);
+            width: 0%;
+            transition: width 2s ease;
+            border-radius: 3px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .branches {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .main-node {
+                font-size: 1.5rem;
+                padding: 15px 30px;
+            }
+            
+            .roadmap-container {
+                padding: 20px;
+            }
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .completion-badge.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="roadmap-container">
+        <h1 class="title">MERN Stack Learning Roadmap</h1>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="roadmap">
+            <div class="learning-path" id="learningPath">
+                <!-- HTML -->
+                <div class="tech-node html show">
+                    <div class="tech-main" onclick="toggleTech('html')">HTML</div>
+                    <div class="subtopics" id="html-topics">
+                        <div class="subtopic" onclick="markComplete(this)">Basic Structure & Elements</div>
+                        <div class="subtopic" onclick="markComplete(this)">Forms & Input Elements</div>
+                        <div class="subtopic" onclick="markComplete(this)">Semantic HTML</div>
+                        <div class="subtopic" onclick="markComplete(this)">Accessibility Basics</div>
+                        <div class="subtopic" onclick="markComplete(this)">HTML5 Features</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow show"></div>
+
+                <!-- CSS -->
+                <div class="tech-node css">
+                    <div class="tech-main" onclick="toggleTech('css')">CSS</div>
+                    <div class="subtopics" id="css-topics">
+                        <div class="subtopic" onclick="markComplete(this)">Selectors & Properties</div>
+                        <div class="subtopic" onclick="markComplete(this)">Flexbox & Grid</div>
+                        <div class="subtopic" onclick="markComplete(this)">Responsive Design</div>
+                        <div class="subtopic" onclick="markComplete(this)">Animations & Transitions</div>
+                        <div class="subtopic" onclick="markComplete(this)">CSS Frameworks</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- JavaScript -->
+                <div class="tech-node javascript">
+                    <div class="tech-main" onclick="toggleTech('javascript')">JavaScript</div>
+                    <div class="subtopics" id="javascript-topics">
+                        <div class="subtopic" onclick="markComplete(this)">Variables & Data Types</div>
+                        <div class="subtopic" onclick="markComplete(this)">Functions & Scope</div>
+                        <div class="subtopic" onclick="markComplete(this)">DOM Manipulation</div>
+                        <div class="subtopic" onclick="markComplete(this)">Async Programming</div>
+                        <div class="subtopic" onclick="markComplete(this)">ES6+ Features</div>
+                        <div class="subtopic" onclick="markComplete(this)">APIs & Fetch</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- MERN Stack -->
+                <div class="tech-node mern">
+                    <div class="tech-main" onclick="toggleMernStack()">MERN Stack</div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- MongoDB -->
+                <div class="tech-node mongodb">
+                    <div class="tech-main" onclick="toggleTech('mongodb')">MongoDB</div>
+                    <div class="subtopics" id="mongodb-topics">
+                        <div class="subtopic" onclick="markComplete(this)">NoSQL Database Fundamentals</div>
+                        <div class="subtopic" onclick="markComplete(this)">Document-Oriented Storage</div>
+                        <div class="subtopic" onclick="markComplete(this)">CRUD Operations</div>
+                        <div class="subtopic" onclick="markComplete(this)">Schema Design</div>
+                        <div class="subtopic" onclick="markComplete(this)">Indexing & Performance</div>
+                        <div class="subtopic" onclick="markComplete(this)">Aggregation Pipeline</div>
+                        <div class="subtopic" onclick="markComplete(this)">Atlas & Cloud Deployment</div>
+                        <div class="subtopic" onclick="markComplete(this)">Mongoose ODM</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- Express.js -->
+                <div class="tech-node express">
+                    <div class="tech-main" onclick="toggleTech('express')">Express.js</div>
+                    <div class="subtopics" id="express-topics">
+                        <div class="subtopic" onclick="markComplete(this)">Server Setup & Configuration</div>
+                        <div class="subtopic" onclick="markComplete(this)">Routing & Middleware</div>
+                        <div class="subtopic" onclick="markComplete(this)">RESTful API Design</div>
+                        <div class="subtopic" onclick="markComplete(this)">Error Handling</div>
+                        <div class="subtopic" onclick="markComplete(this)">Authentication & Authorization</div>
+                        <div class="subtopic" onclick="markComplete(this)">JWT Implementation</div>
+                        <div class="subtopic" onclick="markComplete(this)">File Upload & Processing</div>
+                        <div class="subtopic" onclick="markComplete(this)">API Security Best Practices</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- React.js -->
+                <div class="tech-node react">
+                    <div class="tech-main" onclick="toggleTech('react')">React.js</div>
+                    <div class="subtopics" id="react-topics">
+                        <div class="subtopic" onclick="markComplete(this)">Components & JSX</div>
+                        <div class="subtopic" onclick="markComplete(this)">State & Props Management</div>
+                        <div class="subtopic" onclick="markComplete(this)">React Hooks</div>
+                        <div class="subtopic" onclick="markComplete(this)">Event Handling</div>
+                        <div class="subtopic" onclick="markComplete(this)">React Router</div>
+                        <div class="subtopic" onclick="markComplete(this)">Context API</div>
+                        <div class="subtopic" onclick="markComplete(this)">Redux/Zustand State Management</div>
+                        <div class="subtopic" onclick="markComplete(this)">API Integration</div>
+                        <div class="subtopic" onclick="markComplete(this)">Testing & Optimization</div>
+                    </div>
+                </div>
+
+                <div class="horizontal-arrow"></div>
+
+                <!-- Node.js -->
+                <div class="tech-node nodejs">
+                    <div class="tech-main" onclick="toggleTech('nodejs')">Node.js</div>
+                    <div class="subtopics" id="nodejs-topics">
+                        <div class="subtopic" onclick="markComplete(this)">JavaScript Runtime Environment</div>
+                        <div class="subtopic" onclick="markComplete(this)">NPM Package Management</div>
+                        <div class="subtopic" onclick="markComplete(this)">File System Operations</div>
+                        <div class="subtopic" onclick="markComplete(this)">Asynchronous Programming</div>
+                        <div class="subtopic" onclick="markComplete(this)">Event Loop & Callbacks</div>
+                        <div class="subtopic" onclick="markComplete(this)">Streams & Buffers</div>
+                        <div class="subtopic" onclick="markComplete(this)">Environment Variables</div>
+                        <div class="subtopic" onclick="markComplete(this)">Debugging & Performance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4DB33D;"></div>
+                <span>MongoDB</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #000000;"></div>
+                <span>Express.js</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #61DAFB;"></div>
+                <span>React.js</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #68A063;"></div>
+                <span>Node.js</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedTopics = 0;
+        let totalTopics = 0;
+
+        // Initialize total topics count
+        document.addEventListener('DOMContentLoaded', function() {
+            totalTopics = document.querySelectorAll('.subtopic').length;
+            updateProgress();
+        });
+
+        let currentStep = 0;
+        const totalSteps = 8; // HTML, CSS, JS, MERN, MongoDB, Express, React, Node
+
+        function toggleMernStack() {
+            const techNodes = document.querySelectorAll('.tech-node');
+            const arrows = document.querySelectorAll('.horizontal-arrow');
+            
+            // Show next technology in sequence
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                
+                // Show next arrow
+                if (arrows[currentStep - 1]) {
+                    setTimeout(() => {
+                        arrows[currentStep - 1].classList.add('show');
+                    }, 200);
+                }
+                
+                // Show next technology
+                setTimeout(() => {
+                    techNodes[currentStep].classList.add('show');
+                }, 400);
+            } else {
+                // Reset - hide all except HTML
+                currentStep = 0;
+                techNodes.forEach((node, index) => {
+                    if (index > 0) {
+                        node.classList.remove('show');
+                    }
+                });
+                arrows.forEach((arrow, index) => {
+                    if (index > 0) {
+                        arrow.classList.remove('show');
+                    }
+                });
+                
+                // Close all subtopics
+                document.querySelectorAll('.subtopics').forEach(subtopic => {
+                    subtopic.classList.remove('active');
+                });
+            }
+        }
+
+        function toggleTech(techId) {
+            const topics = document.getElementById(techId + '-topics');
+            const isActive = topics.classList.contains('active');
+            
+            // Close all other subtopics
+            document.querySelectorAll('.subtopics').forEach(subtopic => {
+                subtopic.classList.remove('active');
+            });
+            
+            // Toggle current subtopics
+            if (!isActive) {
+                topics.classList.add('active');
+            }
+        }
+
+        function markComplete(element) {
+            if (!element.classList.contains('completed')) {
+                element.classList.add('completed');
+                element.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                element.style.color = 'white';
+                element.style.transform = 'scale(0.95)';
+                
+                // Add checkmark
+                if (!element.querySelector('.checkmark')) {
+                    const checkmark = document.createElement('span');
+                    checkmark.innerHTML = ' ✓';
+                    checkmark.className = 'checkmark';
+                    element.appendChild(checkmark);
+                }
+                
+                completedTopics++;
+                updateProgress();
+                
+                // Celebration effect
+                createCelebrationEffect(element);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const percentage = (completedTopics / totalTopics) * 100;
+            progressFill.style.width = percentage + '%';
+            
+            // Show completion badges when sections are completed
+            checkSectionCompletion();
+        }
+
+        function checkSectionCompletion() {
+            const sections = ['mongodb', 'express', 'react', 'nodejs', 'integration'];
+            
+            sections.forEach(section => {
+                const sectionTopics = document.querySelectorAll(`#${section}-topics .subtopic`);
+                const completedInSection = document.querySelectorAll(`#${section}-topics .subtopic.completed`);
+                
+                if (sectionTopics.length > 0 && completedInSection.length === sectionTopics.length) {
+                    const badge = document.querySelector(`.${section} .completion-badge, .branch-main .completion-badge`);
+                    if (badge) {
+                        badge.classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function createCelebrationEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const celebration = document.createElement('div');
+            celebration.innerHTML = '🎉';
+            celebration.style.position = 'fixed';
+            celebration.style.left = rect.left + rect.width / 2 + 'px';
+            celebration.style.top = rect.top + 'px';
+            celebration.style.fontSize = '24px';
+            celebration.style.pointerEvents = 'none';
+            celebration.style.zIndex = '1000';
+            celebration.style.animation = 'celebrate 1s ease-out forwards';
+            
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                celebration.remove();
+            }, 1000);
+        }
+
+        // Add celebration animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes celebrate {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.subtopic').forEach(topic => {
+            topic.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('completed')) {
+                    this.style.background = 'rgba(102, 126, 234, 0.1)';
+                }
+            });
+            
+            topic.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('completed')) {
+                    this.style.background = 'rgba(255, 255, 255, 0.9)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
