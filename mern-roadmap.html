@@ -70,6 +70,14 @@
             gap: 40px;
             width: 100%;
             max-width: 1000px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s ease;
+        }
+
+        .branches.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .branch {
@@ -77,6 +85,83 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .branch.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Arrow connections */
+        .arrow-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .arrow {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .arrow.show {
+            opacity: 1;
+        }
+
+        .arrow-line {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 3px;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .arrow-head {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid #667eea;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        /* Specific arrow positioning */
+        .arrow-mongodb {
+            top: -25%;
+            left: -25%;
+            width: 35%;
+            transform: rotate(-35deg);
+        }
+
+        .arrow-express {
+            top: -25%;
+            right: -25%;
+            width: 35%;
+            transform: rotate(35deg);
+        }
+
+        .arrow-react {
+            bottom: -25%;
+            left: -25%;
+            width: 35%;
+            transform: rotate(35deg);
+        }
+
+        .arrow-nodejs {
+            bottom: -25%;
+            right: -25%;
+            width: 35%;
+            transform: rotate(-35deg);
         }
 
         .branch-main {
@@ -242,11 +327,35 @@
         </div>
 
         <div class="roadmap">
-            <div class="main-node" onclick="toggleAllBranches()">
+            <div class="main-node" onclick="toggleTechnologies()">
                 MERN Stack
             </div>
 
-            <div class="branches">
+            <!-- Arrow connections -->
+            <div class="arrow-container">
+                <div class="arrow arrow-mongodb" id="arrow-mongodb">
+                    <div class="arrow-line" style="width: 100%;">
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+                <div class="arrow arrow-express" id="arrow-express">
+                    <div class="arrow-line" style="width: 100%;">
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+                <div class="arrow arrow-react" id="arrow-react">
+                    <div class="arrow-line" style="width: 100%;">
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+                <div class="arrow arrow-nodejs" id="arrow-nodejs">
+                    <div class="arrow-line" style="width: 100%;">
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="branches" id="branches">
                 <!-- MongoDB Branch -->
                 <div class="branch mongodb">
                     <div class="branch-main" onclick="toggleBranch('mongodb')">
@@ -373,6 +482,8 @@
         });
 
         function toggleBranch(branchId) {
+            if (!technologiesVisible) return; // Only allow if technologies are visible
+            
             const topics = document.getElementById(branchId + '-topics');
             const isActive = topics.classList.contains('active');
             
@@ -387,17 +498,74 @@
             }
         }
 
-        function toggleAllBranches() {
-            const allTopics = document.querySelectorAll('.subtopics');
-            const anyActive = Array.from(allTopics).some(topic => topic.classList.contains('active'));
+        let technologiesVisible = false;
+
+        function toggleTechnologies() {
+            const branches = document.getElementById('branches');
+            const arrows = document.querySelectorAll('.arrow');
+            const branchElements = document.querySelectorAll('.branch');
             
-            allTopics.forEach(topic => {
-                if (anyActive) {
-                    topic.classList.remove('active');
-                } else {
-                    topic.classList.add('active');
-                }
-            });
+            if (!technologiesVisible) {
+                // Show arrows first
+                arrows.forEach((arrow, index) => {
+                    setTimeout(() => {
+                        arrow.classList.add('show');
+                    }, index * 200);
+                });
+                
+                // Show branches container
+                setTimeout(() => {
+                    branches.classList.add('show');
+                }, 400);
+                
+                // Animate individual branches
+                branchElements.forEach((branch, index) => {
+                    setTimeout(() => {
+                        branch.classList.add('animate');
+                    }, 600 + (index * 150));
+                });
+                
+                technologiesVisible = true;
+            } else {
+                // Hide everything in reverse order
+                branchElements.forEach((branch, index) => {
+                    setTimeout(() => {
+                        branch.classList.remove('animate');
+                    }, index * 100);
+                });
+                
+                setTimeout(() => {
+                    branches.classList.remove('show');
+                }, 400);
+                
+                arrows.forEach((arrow, index) => {
+                    setTimeout(() => {
+                        arrow.classList.remove('show');
+                    }, 600 + (index * 100));
+                });
+                
+                // Close all subtopics
+                document.querySelectorAll('.subtopics').forEach(subtopic => {
+                    subtopic.classList.remove('active');
+                });
+                
+                technologiesVisible = false;
+            }
+        }
+
+        function toggleAllBranches() {
+            if (technologiesVisible) {
+                const allTopics = document.querySelectorAll('.subtopics');
+                const anyActive = Array.from(allTopics).some(topic => topic.classList.contains('active'));
+                
+                allTopics.forEach(topic => {
+                    if (anyActive) {
+                        topic.classList.remove('active');
+                    } else {
+                        topic.classList.add('active');
+                    }
+                });
+            }
         }
 
         function markComplete(element) {
